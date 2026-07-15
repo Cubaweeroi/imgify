@@ -26,7 +26,7 @@ bin2png: common.o imgify.o
 png2bin: common.o imgify.o
 	clang -o $@ png2bin.c $^ $(CFLAGS) $(LDFLAGS)
 	
-.PHONY: debug release sanitize
+.PHONY: debug release sanitize sanitize-demo
 
 debug: CFLAGS += -O0 -g3
 debug: clean all
