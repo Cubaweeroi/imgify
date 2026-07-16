@@ -1,0 +1,6 @@
+imgify.c:33:13: style: Unsigned expression 'row' can't be negative so it is unnecessary to test it. [unsignedPositive]
+ assert(row >= 0 && row < height);
+            ^
+imgify.c:34:13: style: Unsigned expression 'col' can't be negative so it is unnecessary to test it. [unsignedPositive]
+ assert(col >= 0 && col < width);
+            ^
