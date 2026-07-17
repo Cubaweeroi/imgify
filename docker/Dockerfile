@@ -4,10 +4,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     clang \
     llvm \
+    libclang-rt-17-dev \
     libclang-rt-18-dev \
     libpng-dev \
     lcov \
     cppcheck \
+    afl++ \
     make \
     git \
     ca-certificates \

@@ -49,3 +49,18 @@ jobs:
         with:
           name: coverage-html
           path: reports/coverage_html/
+
+  fuzz-smoke-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Сборка образа Docker
+        run: docker build -t imgify-build -f docker/Dockerfile .
+      - name: Сборка версии на фаззинг
+        run: docker run --rm -v ${{ github.workspace }}:/src -w /src imgify-build make fuzz
+      - name: Короткий прогон AFL++ (smoke run, 60 секунд)
+        run: |
+          docker run --rm -v ${{ github.workspace }}:/src -w /src \
+            -e AFL_SKIP_CPUFREQ=1 -e AFL_I_DONT_CARE_ABOUT_MISSING_CRASHES=1 \
+            imgify-build timeout 60 afl-fuzz -i corpus/bin2png -o /tmp/smoke_out \
+            -- ./bin2png -i @@ -o /tmp/smoke.png || true
