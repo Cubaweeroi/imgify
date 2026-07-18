@@ -1,0 +1,65 @@
+png2bin.c:37:32: runtime error: signed integer overflow: 2147483647 + 1 cannot be represented in type 'int'
+SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior png2bin.c:37:32 
+=================================================================
+==1==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x519000000403 at pc 0x556b673b145a bp 0x7ffdc5a5ed40 sp 0x7ffdc5a5e4f8
+WRITE of size 60 at 0x519000000403 thread T0
+==1==WARNING: invalid path to external symbolizer!
+==1==WARNING: Failed to use and restart external symbolizer!
+    #0 0x556b673b1459  (/src/png2bin+0xc8459) (BuildId: 0405ceaebff5670beee3667969da11ad74b27081)
+    #1 0x7f0119f0d40c  (/lib/x86_64-linux-gnu/libpng16.so.16+0x1540c) (BuildId: bec3c0b8ccce49394f223a6a44001319c0330473)
+    #2 0x7f0119f05c0b  (/lib/x86_64-linux-gnu/libpng16.so.16+0xdc0b) (BuildId: bec3c0b8ccce49394f223a6a44001319c0330473)
+    #3 0x7f0119f09dc8  (/lib/x86_64-linux-gnu/libpng16.so.16+0x11dc8) (BuildId: bec3c0b8ccce49394f223a6a44001319c0330473)
+    #4 0x556b673f2e8d  (/src/png2bin+0x109e8d) (BuildId: 0405ceaebff5670beee3667969da11ad74b27081)
+    #5 0x556b673f18d5  (/src/png2bin+0x1088d5) (BuildId: 0405ceaebff5670beee3667969da11ad74b27081)
+    #6 0x556b673f0c38  (/src/png2bin+0x107c38) (BuildId: 0405ceaebff5670beee3667969da11ad74b27081)
+    #7 0x7f0119be61c9  (/lib/x86_64-linux-gnu/libc.so.6+0x2a1c9) (BuildId: 8e9fd827446c24067541ac5390e6f527fb5947bb)
+    #8 0x7f0119be628a  (/lib/x86_64-linux-gnu/libc.so.6+0x2a28a) (BuildId: 8e9fd827446c24067541ac5390e6f527fb5947bb)
+    #9 0x556b67317524  (/src/png2bin+0x2e524) (BuildId: 0405ceaebff5670beee3667969da11ad74b27081)
+
+0x519000000403 is located 0 bytes after 899-byte region [0x519000000080,0x519000000403)
+allocated by thread T0 here:
+    #0 0x556b673b2373  (/src/png2bin+0xc9373) (BuildId: 0405ceaebff5670beee3667969da11ad74b27081)
+    #1 0x556b673f2be0  (/src/png2bin+0x109be0) (BuildId: 0405ceaebff5670beee3667969da11ad74b27081)
+    #2 0x556b673f18d5  (/src/png2bin+0x1088d5) (BuildId: 0405ceaebff5670beee3667969da11ad74b27081)
+    #3 0x556b673f0c38  (/src/png2bin+0x107c38) (BuildId: 0405ceaebff5670beee3667969da11ad74b27081)
+    #4 0x7f0119be61c9  (/lib/x86_64-linux-gnu/libc.so.6+0x2a1c9) (BuildId: 8e9fd827446c24067541ac5390e6f527fb5947bb)
+    #5 0x7f0119be628a  (/lib/x86_64-linux-gnu/libc.so.6+0x2a28a) (BuildId: 8e9fd827446c24067541ac5390e6f527fb5947bb)
+    #6 0x556b67317524  (/src/png2bin+0x2e524) (BuildId: 0405ceaebff5670beee3667969da11ad74b27081)
+
+SUMMARY: AddressSanitizer: heap-buffer-overflow (/src/png2bin+0xc8459) (BuildId: 0405ceaebff5670beee3667969da11ad74b27081) 
+Shadow bytes around the buggy address:
+  0x519000000180: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x519000000200: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x519000000280: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x519000000300: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x519000000380: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x519000000400:[03]fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x519000000480: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x519000000500: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x519000000580: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x519000000600: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x519000000680: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+Input file => out.png
+  size => 952 bytes
+  image => 15x15 px, 32 bpp, 10px padding
+Output file => out.bin
+  size => 857 bytes

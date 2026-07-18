@@ -1,0 +1,59 @@
+bin2png.c:37:2: runtime error: index 4 out of bounds for type 'char[4]'
+SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior bin2png.c:37:2 
+=================================================================
+==1==ERROR: AddressSanitizer: stack-buffer-overflow on address 0x7f4412f00064 at pc 0x55b3962f4831 bp 0x7fff9737c870 sp 0x7fff9737c868
+WRITE of size 1 at 0x7f4412f00064 thread T0
+==1==WARNING: invalid path to external symbolizer!
+==1==WARNING: Failed to use and restart external symbolizer!
+    #0 0x55b3962f4830  (/src/bin2png+0x108830) (BuildId: ec14a109e326af5de60552ed10681e4e60c7d785)
+    #1 0x55b3962f3c58  (/src/bin2png+0x107c58) (BuildId: ec14a109e326af5de60552ed10681e4e60c7d785)
+    #2 0x7f4414ec61c9  (/lib/x86_64-linux-gnu/libc.so.6+0x2a1c9) (BuildId: 8e9fd827446c24067541ac5390e6f527fb5947bb)
+    #3 0x7f4414ec628a  (/lib/x86_64-linux-gnu/libc.so.6+0x2a28a) (BuildId: 8e9fd827446c24067541ac5390e6f527fb5947bb)
+    #4 0x55b39621a544  (/src/bin2png+0x2e544) (BuildId: ec14a109e326af5de60552ed10681e4e60c7d785)
+
+Address 0x7f4412f00064 is located in stack of thread T0 at offset 36 in frame
+    #0 0x55b3962f4667  (/src/bin2png+0x108667) (BuildId: ec14a109e326af5de60552ed10681e4e60c7d785)
+
+  This frame has 1 object(s):
+    [32, 36) 'stack_buf' (line 36) <== Memory access at offset 36 overflows this variable
+HINT: this may be a false positive if your program uses some custom stack unwind mechanism, swapcontext or vfork
+      (longjmp and C++ exceptions *are* supported)
+SUMMARY: AddressSanitizer: stack-buffer-overflow (/src/bin2png+0x108830) (BuildId: ec14a109e326af5de60552ed10681e4e60c7d785) 
+Shadow bytes around the buggy address:
+  0x7f4412effd80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x7f4412effe00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x7f4412effe80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x7f4412efff00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x7f4412efff80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x7f4412f00000: f5 f5 f5 f5 f5 f5 f5 f5 f1 f1 f1 f1[04]f3 f3 f3
+  0x7f4412f00080: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x7f4412f00100: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x7f4412f00180: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x7f4412f00200: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x7f4412f00280: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+bin2png.c:38:21: runtime error: shift exponent 40 is too large for 32-bit type 'int'
+SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior bin2png.c:38:21 
+Input file => README.md
+  size => 857 bytes
+Output file => out.png
+  size => 952 bytes
+  image => 15x15 px, 32 bpp, 10px padding

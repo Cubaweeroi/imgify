@@ -25,3 +25,24 @@ bin2png: common.o imgify.o
 
 png2bin: common.o imgify.o
 	clang -o $@ png2bin.c $^ $(CFLAGS) $(LDFLAGS)
+	
+.PHONY: debug release sanitize sanitize-demo coverage
+
+debug: CFLAGS += -O0 -g3
+debug: clean all
+
+release: CFLAGS += -O2 -DNDEBUG
+release: clean all
+
+sanitize: CFLAGS += -O0 -g3 -fsanitize=address,undefined -fno-omit-frame-pointer -fno-sanitize-recover=all
+sanitize: LDFLAGS += -fsanitize=address,undefined
+sanitize: clean all
+
+sanitize-demo: CFLAGS += -O0 -g3 -fsanitize=address,undefined -fno-omit-frame-pointer -fsanitize-recover=address,undefined
+sanitize-demo: LDFLAGS += -fsanitize=address,undefined
+sanitize-demo: clean all
+
+coverage: CFLAGS += -O0 -g3 --coverage -fprofile-arcs -ftest-coverage
+coverage: LDFLAGS += --coverage
+coverage: clean all
+
