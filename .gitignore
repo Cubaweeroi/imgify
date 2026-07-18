@@ -1,3 +1,4 @@
 *.o
 bin2png
 png2bin
+reports/coverage_html/
