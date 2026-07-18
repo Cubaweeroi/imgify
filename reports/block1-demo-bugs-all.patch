@@ -1,0 +1,42 @@
+diff --git a/bin2png.c b/bin2png.c
+index d930702..ed9ce21 100644
+--- a/bin2png.c
++++ b/bin2png.c
+@@ -33,6 +33,10 @@
+ #include "version.h"
+ 
+ static void do_work(const options_t *options, void *data, size_t filesize) {
++	char stack_buf[4];
++	stack_buf[4] = 'X'; 						// Баг 3 – Asan
++	int demo_shift = 1 << 40; 					// Баг 4 - UBSan
++	(void)demo_shift;
+ 	const uint8_t channels = 4;
+ 	const uint32_t width = ceil(sqrt((double)filesize / channels));
+ 	const uint32_t height = ceil((double)filesize / channels / width);
+diff --git a/imgify.c b/imgify.c
+index abf04c6..334a772 100644
+--- a/imgify.c
++++ b/imgify.c
+@@ -115,7 +115,7 @@ bool png_load(const char *filename, uint8_t **out_buffer, size_t *out_buffer_siz
+ 	const size_t data_size = width * height * bit_depth * channels / 8;
+ 
+ 	// Allocate the data buffer.
+-	uint8_t *data = malloc(data_size);
++	uint8_t *data = malloc(data_size - 1); 				// Баг 1 – ASan
+ 	if (data == NULL) {
+ 		png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
+ 		fclose(fp);
+diff --git a/png2bin.c b/png2bin.c
+index f248d89..83ec791 100644
+--- a/png2bin.c
++++ b/png2bin.c
+@@ -33,6 +33,9 @@
+ #include "version.h"
+ 
+ static void do_work(const options_t *options, void *data, size_t filesize) {
++	int32_t demo_overflow = INT32_MAX;
++	demo_overflow = demo_overflow + 1; 			// Баг 2 - UBSan
++	(void)demo_overflow;
+ 	uint8_t *buffer;
+ 	size_t buffer_size;
+ 	uint32_t width;
