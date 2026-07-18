@@ -43,7 +43,7 @@ run_case "маленький файл (1 байт)" "/tmp/tiny.bin"
 
 # Кейс 3: файл, не требующий padding
 head -c 400 /dev/urandom > /tmp/exact.bin  # 10*10*4 = 400 байт
-run_case "exact-fit file (no padding)" "/tmp/exact.bin"
+run_case "файл, не требующий padding" "/tmp/exact.bin"
 
 # Кейс 4: файл, требующий padding
 head -c 397 /dev/urandom > /tmp/padded.bin
