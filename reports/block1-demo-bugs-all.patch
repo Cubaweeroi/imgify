@@ -1,27 +1,3 @@
-diff --git a/Makefile b/Makefile
-index 766ecf2..6ef5fdf 100644
---- a/Makefile
-+++ b/Makefile
-@@ -25,3 +25,19 @@ bin2png: common.o imgify.o
- 
- png2bin: common.o imgify.o
- 	clang -o $@ png2bin.c $^ $(CFLAGS) $(LDFLAGS)
-+	
-+.PHONY: debug release sanitize
-+
-+debug: CFLAGS += -O0 -g3
-+debug: clean all
-+
-+release: CFLAGS += -O2 -DNDEBUG
-+release: clean all
-+
-+sanitize: CFLAGS += -O0 -g3 -fsanitize=address,undefined -fno-omit-frame-pointer -fno-sanitize-recover=all
-+sanitize: LDFLAGS += -fsanitize=address,undefined
-+sanitize: clean all
-+
-+sanitize-demo: CFLAGS += -O0 -g3 -fsanitize=address,undefined -fno-omit-frame-pointer -fsanitize-recover=address,undefined
-+sanitize-demo: LDFLAGS += -fsanitize=address,undefined
-+sanitize-demo: clean all
 diff --git a/bin2png.c b/bin2png.c
 index d930702..ed9ce21 100644
 --- a/bin2png.c
