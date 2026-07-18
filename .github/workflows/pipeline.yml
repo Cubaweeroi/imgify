@@ -1,0 +1,66 @@
+name: Конвейер сборки и тестирования
+
+on:
+  push:
+    branches: [ "**" ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Сборка образа Docker 
+        run: docker build -t imgify-build -f docker/Dockerfile .
+      - name: Сборка отладочной версии
+        run: docker run --rm -v ${{ github.workspace }}:/src -w /src imgify-build make debug
+      - name: Запуск функциональных тестов
+        run: docker run --rm -v ${{ github.workspace }}:/src -w /src -e PATH="/src:$PATH" imgify-build bash tests/run_tests.sh
+
+  sanitizers:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Сборка образа Docker
+        run: docker build -t imgify-build -f docker/Dockerfile .
+      - name: Сборка версии с санитайзерами
+        run: docker run --rm -v ${{ github.workspace }}:/src -w /src imgify-build make sanitize
+      - name: Запуск функциональных тестов с санитайзерами
+        run: docker run --rm -v ${{ github.workspace }}:/src -w /src -e PATH="/src:$PATH" imgify-build bash tests/run_tests.sh
+
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Сборка образа Docker
+        run: docker build -t imgify-build -f docker/Dockerfile .
+      - name: Сборка версии на покрытие
+        run: docker run --rm -v ${{ github.workspace }}:/src -w /src imgify-build make coverage
+      - name: Запуск функциональных тестов с инструментацией покрытия
+        run: docker run --rm -v ${{ github.workspace }}:/src -w /src -e PATH="/src:$PATH" imgify-build bash tests/run_tests.sh
+      - name: Генерация отчёта покрытия
+        run: |
+          docker run --rm -v ${{ github.workspace }}:/src -w /src imgify-build bash -c \
+            "lcov --capture --directory . --output-file coverage.info --gcov-tool /usr/local/bin/llvm-gcov && \
+             genhtml coverage.info --output-directory reports/coverage_html"
+      - name: Загрузка отчёта покрытия как артефакта
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-html
+          path: reports/coverage_html/
+
+  fuzz-smoke-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Сборка образа Docker
+        run: docker build -t imgify-build -f docker/Dockerfile .
+      - name: Сборка версии на фаззинг
+        run: docker run --rm -v ${{ github.workspace }}:/src -w /src imgify-build make fuzz
+      - name: Короткий прогон AFL++ (smoke run, 60 секунд)
+        run: |
+          docker run --rm -v ${{ github.workspace }}:/src -w /src \
+            -e AFL_SKIP_CPUFREQ=1 -e AFL_I_DONT_CARE_ABOUT_MISSING_CRASHES=1 \
+            imgify-build timeout 60 afl-fuzz -i corpus/bin2png -o /tmp/smoke_out \
+            -- ./bin2png -i @@ -o /tmp/smoke.png || true

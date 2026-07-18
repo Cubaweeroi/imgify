@@ -1,0 +1,36 @@
+diff --git a/.gitignore b/.gitignore
+index dc0f8a7..c3392b2 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -1,3 +1,4 @@
+ *.o
+ bin2png
+ png2bin
++reports/coverage_html/
+diff --git a/docker/Dockerfile b/docker/Dockerfile
+index 77c2335..c28b83b 100644
+--- a/docker/Dockerfile
++++ b/docker/Dockerfile
+@@ -7,6 +7,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
+     libclang-rt-18-dev \
+     libpng-dev \
+     lcov \
++    cppcheck \
+     make \
+     git \
+     ca-certificates \
+diff --git a/imgify.c b/imgify.c
+index abf04c6..9cfd32a 100644
+--- a/imgify.c
++++ b/imgify.c
+@@ -30,8 +30,8 @@
+ 
+ static uint8_t* pixel_at(uint8_t *data, uint32_t row, uint32_t col, uint32_t width, uint32_t height, uint8_t channels) {
+ 	assert(data != NULL);
+-	assert(row >= 0 && row < height);
+-	assert(col >= 0 && col < width);
++	assert(row < height);
++	assert(col < width);
+ 	const uint32_t offset = (row * width + col) * channels;
+ 	//printf("DEBUG: [pixel_at] row %d -> offset %u\n", row+1, offset);
+ 	return &data[offset];

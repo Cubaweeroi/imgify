@@ -1,3 +1,11 @@
 *.o
 bin2png
 png2bin
+reports/coverage_html/
+reports/fuzz_bin2png/
+reports/fuzz_png2bin/
+reports/fuzz_coverage_html/
+*.gcda
+*.gcno
+coverage.info
+fuzz_coverage.info

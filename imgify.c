@@ -30,8 +30,8 @@
 
 static uint8_t* pixel_at(uint8_t *data, uint32_t row, uint32_t col, uint32_t width, uint32_t height, uint8_t channels) {
 	assert(data != NULL);
-	assert(row >= 0 && row < height);
-	assert(col >= 0 && col < width);
+	assert(row < height);
+	assert(col < width);
 	const uint32_t offset = (row * width + col) * channels;
 	//printf("DEBUG: [pixel_at] row %d -> offset %u\n", row+1, offset);
 	return &data[offset];
